@@ -5,20 +5,20 @@
       <h1>登錄</h1>
       <el-card shadow="never" class="login-card">
         <!--登錄-->
-        <el-form>
-          <el-form-item>
-            <el-input placeholder="請輸入Email"></el-input>
+        <el-form ref="form" :model="loginForm" :rules="loginRules">
+          <el-form-item prop="email">
+            <el-input v-model="loginForm.email" placeholder="請輸入Email" />
           </el-form-item>
-          <el-form-item>
-            <el-input placeholder="請輸入密碼"></el-input>
+          <el-form-item prop="password">
+            <el-input v-model="loginForm.password" show-password placeholder="請輸入密碼" />
           </el-form-item>
-          <el-form-item>
-            <el-checkbox>
+          <el-form-item prop="isAgree">
+            <el-checkbox v-model="loginForm.isAgree">
               用戶平台使用協議
             </el-checkbox>
           </el-form-item>
           <el-form-item>
-            <el-button style="width: 350px;" type="primary">
+            <el-button @click="login" style="width: 350px;" type="primary">
               登錄
             </el-button>
           </el-form-item>
@@ -29,7 +29,53 @@
 </template>
 <script>
 export default {
-  name: "Login"
+  name: "Login /",
+  data() {
+    return {
+      loginForm: {
+        email: '',
+        password: '',
+        isAgree: false
+      },
+      loginRules: {
+        email: [{
+          required: true,
+          message: '請輸入email',
+          trigger: 'blur'
+        }, {
+          pattern: /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/,
+          message: 'email格式錯誤',
+          trigger: 'blur'
+        }],
+        password: [{
+          required: true,
+          message: '請輸入密碼',
+          trigger: 'blur'
+        },
+        {
+          min: 6,
+          max: 16,
+          message: '密碼長度位於6~16之間',
+          trigger: 'blur'
+
+        }],
+        isAgree: [{
+          validator: (rule, value, callback) => {
+            // rule 格式
+            // value 值
+            // callback ->promise - reject
+            // callback ==callback(new Error )
+            value ? callback() : callback(new Error('必須勾選'))
+          }
+        }]
+      }
+    }
+  },
+  methods: {
+    login() {
+      this.$refs.form.validate()
+    }
+  }
 }
 </script>
 <style lang="scss">
