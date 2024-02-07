@@ -21,7 +21,6 @@
             <el-button style="width: 350px;" type="primary" @click="login">
               登錄
             </el-button>
-            <el-button @click="testAjax">testAjax</el-button>
           </el-form-item>
         </el-form>
       </el-card>
