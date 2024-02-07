@@ -6,8 +6,8 @@
       <el-card shadow="never" class="login-card">
         <!--登錄-->
         <el-form ref="form" :model="loginForm" :rules="loginRules">
-          <el-form-item prop="email">
-            <el-input v-model="loginForm.email" placeholder="請輸入Email" />
+          <el-form-item prop="mobile">
+            <el-input v-model="loginForm.mobile" placeholder="請輸入手機號" />
           </el-form-item>
           <el-form-item prop="password">
             <el-input v-model="loginForm.password" show-password placeholder="請輸入密碼" />
@@ -18,9 +18,10 @@
             </el-checkbox>
           </el-form-item>
           <el-form-item>
-            <el-button @click="login" style="width: 350px;" type="primary">
+            <el-button style="width: 350px;" type="primary" @click="login">
               登錄
             </el-button>
+            <el-button @click="testAjax">testAjax</el-button>
           </el-form-item>
         </el-form>
       </el-card>
@@ -29,7 +30,7 @@
 </template>
 <script>
 export default {
-  name: "Login /",
+  name: 'Login',
   data() {
     return {
       loginForm: {
@@ -38,13 +39,13 @@ export default {
         isAgree: false
       },
       loginRules: {
-        email: [{
+        mobile: [{
           required: true,
-          message: '請輸入email',
+          message: '請輸入mobile',
           trigger: 'blur'
         }, {
-          pattern: /[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/,
-          message: 'email格式錯誤',
+          pattern: /^(09)\d{8}$|^(\+8869)\d{9}$/,
+          message: 'mobile格式錯誤',
           trigger: 'blur'
         }],
         password: [{
@@ -73,7 +74,12 @@ export default {
   },
   methods: {
     login() {
-      this.$refs.form.validate()
+      this.$refs.form.validate(
+        (isOK) => {
+          if (isOK) {
+            this.$store.dispatch('user/login', this.loginForm)
+          }
+        })
     }
   }
 }
